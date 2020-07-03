@@ -98,7 +98,7 @@ def NaiveBayes():
 
     h='no'
     for a in range(0,len(disease)):
-        if(predicted == a):
+        if(disease[predicted] == disease[a]):
             h='yes'
             break
 
