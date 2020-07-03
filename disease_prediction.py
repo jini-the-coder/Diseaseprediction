@@ -36,7 +36,23 @@ l2=[]
 for x in range(0,len(l1)):
     l2.append(0)
 
-# TRAINING DATA df -------------------------------------------------------------------------------------
+# TESTING DATA
+tr=pd.read_csv("Testing.csv")
+tr.replace({'prognosis':{'Fungal infection':0,'Allergy':1,'GERD':2,'Chronic cholestasis':3,'Drug Reaction':4,
+'Peptic ulcer diseae':5,'AIDS':6,'Diabetes ':7,'Gastroenteritis':8,'Bronchial Asthma':9,'Hypertension ':10,
+'Migraine':11,'Cervical spondylosis':12,
+'Paralysis (brain hemorrhage)':13,'Jaundice':14,'Malaria':15,'Chicken pox':16,'Dengue':17,'Typhoid':18,'hepatitis A':19,
+'Hepatitis B':20,'Hepatitis C':21,'Hepatitis D':22,'Hepatitis E':23,'Alcoholic hepatitis':24,'Tuberculosis':25,
+'Common Cold':26,'Pneumonia':27,'Dimorphic hemmorhoids(piles)':28,'Heart attack':29,'Varicose veins':30,'Hypothyroidism':31,
+'Hyperthyroidism':32,'Hypoglycemia':33,'Osteoarthristis':34,'Arthritis':35,
+'(vertigo) Paroymsal  Positional Vertigo':36,'Acne':37,'Urinary tract infection':38,'Psoriasis':39,
+'Impetigo':40}},inplace=True)
+
+X_test= tr[l1]
+y_test = tr[["prognosis"]]
+np.ravel(y_test)
+
+# TRAINING DATA
 df=pd.read_csv("Training.csv")
 
 df.replace({'prognosis':{'Fungal infection':0,'Allergy':1,'GERD':2,'Chronic cholestasis':3,'Drug Reaction':4,
@@ -64,6 +80,10 @@ def NaiveBayes():
     from sklearn.naive_bayes import MultinomialNB
     gnb = MultinomialNB()
     gnb=gnb.fit(X,np.ravel(y))
+    from sklearn.metrics import accuracy_score
+    y_pred = gnb.predict(X_test)
+    print(accuracy_score(y_test, y_pred))
+    print(accuracy_score(y_test, y_pred, normalize=False))
 
     psymptoms = [Symptom1.get(),Symptom2.get(),Symptom3.get(),Symptom4.get(),Symptom5.get()]
 
@@ -89,12 +109,10 @@ def NaiveBayes():
         t3.delete("1.0", END)
         t3.insert(END, "No Disease")
 
-# gui_stuff------------------------------------------------------------------------------------
-
 root = Tk()
+root.title(" Disease Prediction From Symptoms")
 root.configure()
 
-# entry variables
 Symptom1 = StringVar()
 Symptom1.set(None)
 Symptom2 = StringVar()
@@ -106,7 +124,6 @@ Symptom4.set(None)
 Symptom5 = StringVar()
 Symptom5.set(None)
 
-# Heading
 w2 = Label(root, justify=LEFT, text=" Disease Prediction From Symptoms ")
 w2.config(font=("Elephant", 30))
 w2.grid(row=1, column=0, columnspan=2, padx=100)
@@ -114,7 +131,6 @@ w2.grid(row=1, column=0, columnspan=2, padx=100)
 NameLb1 = Label(root, text="")
 NameLb1.config(font=("Elephant", 20))
 NameLb1.grid(row=5, column=1, pady=10,  sticky=W)
-# labels
 
 S1Lb = Label(root,  text="Symptom 1")
 S1Lb.config(font=("Elephant", 15))
@@ -140,7 +156,6 @@ lr = Button(root, text="Predict",height=2, width=20, command=message)
 lr.config(font=("Elephant", 15))
 lr.grid(row=15, column=1,pady=20)
 
-# entries
 OPTIONS = sorted(l1)
 
 S1En = OptionMenu(root, Symptom1,*OPTIONS)
